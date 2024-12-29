@@ -35,6 +35,13 @@ public class MainActivity extends AppCompatActivity {
         setOperatorButtonListeners();
         setEqualButtonListener();
         setClearButtonListeners();
+        setSqrtButtonListener();
+        setBackspaceButtonListener();
+        setOneDivideByButtonListener();
+        setChangeSignButtonListener();
+        setCommaButtonListener();
+        setPercentageButtonListener();
+
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -42,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
     }
+
     private void setNumberButtonListeners() {
         int[] numberButtonIds = {R.id.cal0, R.id.cal1, R.id.cal2, R.id.cal3, R.id.cal4, R.id.cal5, R.id.cal6, R.id.cal7, R.id.cal8, R.id.cal9};
         View.OnClickListener listener = v -> {
@@ -65,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         View.OnClickListener listener = v -> {
             Button button = (Button) v;
             currentOperator = button.getText().toString();
-            firstValue = Double.parseDouble(calculatorScreen.getText().toString());
+            firstValue = Double.parseDouble(calculatorScreen.getText().toString().replace(",", ""));
             operatorPressed = true;
         };
 
@@ -76,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setEqualButtonListener() {
         findViewById(R.id.calEqual).setOnClickListener(v -> {
-            secondValue = Double.parseDouble(calculatorScreen.getText().toString());
+            secondValue = Double.parseDouble(calculatorScreen.getText().toString().replace(",", ""));
             double result = 0;
             switch (currentOperator) {
                 case "+":
@@ -102,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
     private void setClearButtonListeners() {
         findViewById(R.id.calC).setOnClickListener(v -> calculatorScreen.setText(""));
         findViewById(R.id.calCE).setOnClickListener(v -> {
@@ -111,4 +120,62 @@ public class MainActivity extends AppCompatActivity {
             currentOperator = "";
         });
     }
+
+    private void setSqrtButtonListener() {
+        findViewById(R.id.calRoot).setOnClickListener(v -> {
+            double value = Double.parseDouble(calculatorScreen.getText().toString());
+            double result = Math.sqrt(value);
+            calculatorScreen.setText(String.valueOf(result));
+            operatorPressed = true;
+        });
+    }
+
+    private void setBackspaceButtonListener() {
+        findViewById(R.id.calDelete).setOnClickListener(v -> {
+            String currentText = calculatorScreen.getText().toString();
+            if (currentText.length() > 0) {
+                calculatorScreen.setText(currentText.substring(0, currentText.length() - 1));
+            }
+        });
+    }
+
+    private void setOneDivideByButtonListener() {
+        findViewById(R.id.cal1DivideBy).setOnClickListener(v -> {
+            double value = Double.parseDouble(calculatorScreen.getText().toString());
+            if (value != 0) {
+                double result = 1 / value;
+                calculatorScreen.setText(String.valueOf(result));
+            } else {
+                calculatorScreen.setText("Error");
+            }
+            operatorPressed = true;
+        });
+    }
+
+    private void setChangeSignButtonListener() {
+        findViewById(R.id.calChangeSign).setOnClickListener(v -> {
+            double value = Double.parseDouble(calculatorScreen.getText().toString());
+            double result = value * -1;
+            calculatorScreen.setText(String.valueOf(result));
+        });
+    }
+
+    private void setCommaButtonListener() {
+        findViewById(R.id.calComma).setOnClickListener(v -> {
+            String currentText = calculatorScreen.getText().toString();
+            if (!currentText.contains(".")) {
+                calculatorScreen.append(".");
+            }
+        });
+    }
+
+    private void setPercentageButtonListener() {
+        findViewById(R.id.calProc).setOnClickListener(v -> {
+            double value = Double.parseDouble(calculatorScreen.getText().toString());
+            double result = value / 100;
+            calculatorScreen.setText(String.valueOf(result));
+            operatorPressed = true;
+        });
+    }
 }
+
